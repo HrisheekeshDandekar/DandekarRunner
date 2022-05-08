@@ -75,7 +75,7 @@ char* set_command(int argc, char** argv)
 	//(3) -> filename_c --- [size+1]
 	//(4) -> optimization - [3]
 	//(5) -> filename_raw - [size-1]
-	//(6) -> pipying ------ [2]
+	//(6) -> piping ------ [2]
 	//(7) -> execute ------ [size+4]
 
 	int filename_size = strlen(argv[1]);
@@ -85,18 +85,40 @@ char* set_command(int argc, char** argv)
 	//--- CREATING FINAL COMMAND ---
 
 	//Compiler ( make it dynamic later ) 
-	char* compiler = "gcc";
+	char* compiler = "gcc ";
 
 	//Flags ( read from file later )
-	char* flags= "-Wall -Werror -o";
+	char* flags= "-Wall -Werror -o ";
 
-	//Allocate memory and set without extension
-	char* filename_raw = (char*)malloc((filename_size - 2) * sizeof(char));
+	//filename.c as it is
+	char* filename_c = argv[1];
+
+	//optimization level
+	char* optimization = "-o ";
+
+	//Filename raw for executable name
+	char* filename_raw = (char*)malloc((filename_size - 2 + 1) * sizeof(char));
 	for( int i = 0; i < filename_size - 2; i++ )
+	{
 		filename_raw[i] = argv[1][i];
+	}
+	filename_raw[filename_size - 2] = ' '; //Setting last char as whitespace
 
-	//Windows executable program name (.exe)
-	char* execute_name = (char*)malloc((filename_size 
+	//piping command
+	char* piping = "; ";
+
+	//execute
+	char* execute = (char*)malloc((filename_size + 4) * sizeof(char));
+	strncpy(execute, "./", 2); //strncpy does not give null termination if
+							   //destination no of characters are copied
+	//Filename copying without extension
+	for( int i = 0; i < filename_size - 2; i++ ) 
+		execute[i + 2] = filename_raw[i];
+
+	//adding.exe
+	strncpy(&execute[filename_size + 1], ".exe", 4);
+
+	//Filling final command
 
 	return fnl_command;
 }
