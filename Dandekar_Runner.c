@@ -1,3 +1,17 @@
+/*
+ * [TODO]
+ *     -> Create ints for all the different sizes of 
+ *		  different parts of compile and run command
+ *		  
+ *	   -> File to store attributes like:
+ *			header files 
+ *			flags
+ *			optimization
+ *			exe name
+ *			( local settings and global settings files )
+ *     
+ *     -> Support for different languages like C++, java 
+ */
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -64,8 +78,8 @@ char* set_command(int argc, char** argv)
 {
 	// --- SETTING COMMAND SIZE ---
 	//|        (1)|      (2)    |    (3)   |4 |  (5)   |6|   (7)       |
-	//command: gcc -Wall -Werror filename.c -o filename ; ./filename.exe
-	//sizes  : 4___6_____8_______f_size+1___3__f_size-1_2_f_name+4
+	//command: gcc -Wall -Werror filename.c -o filename ; .\\filename.exe
+	//sizes  : 4___6_____8_______f_size+1___3__f_size-1_2_f_name+5
 	//command size = 27 + (filename_size * 2)
 	//
 	//
@@ -76,7 +90,7 @@ char* set_command(int argc, char** argv)
 	//(4) -> optimization - [3]
 	//(5) -> filename_raw - [size-1]
 	//(6) -> piping ------ [2]
-	//(7) -> execute ------ [size+4]
+	//(7) -> execute ------ [size+5]
 
 	int filename_size = strlen(argv[1]);
 	int command_size = (filename_size * 2) + 27;
@@ -108,12 +122,12 @@ char* set_command(int argc, char** argv)
 	char* piping = "; ";
 
 	//execute
-	char* execute = (char*)malloc((filename_size + 4) * sizeof(char));
-	strncpy(execute, "./", 2); //strncpy does not give null termination if
+	char* execute = (char*)malloc((filename_size + 5) * sizeof(char));
+	strncpy(execute, ".\\", 3); //strncpy does not give null termination if
 							   //destination no of characters are copied
 	//Filename copying without extension
 	for( int i = 0; i < filename_size - 2; i++ ) 
-		execute[i + 2] = filename_raw[i];
+		execute[i + 3] = filename_raw[i];
 
 	//adding.exe
 	strncpy(&execute[filename_size + 1], ".exe", 4);
